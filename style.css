@@ -533,10 +533,10 @@ outline: none;
  @media (max-width: 768px) {
 
     #home .navbar nav {
-        display: block;
+        display: flex;
         text-align: center;
         margin: auto;
-        margin-left: 8px;
+        margin-left: 25px;
     }
     #home .navbar nav ul {
         margin-top: 20px;
@@ -612,6 +612,8 @@ outline: none;
     #home .navbar nav {
         width: 100%;
         display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
         margin: auto;
         margin-left: 1px;
