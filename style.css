@@ -535,7 +535,7 @@ outline: none;
     #home .navbar nav {
         display: block;
         text-align: center;
-        max-width: 425%;
+        margin-right: 425%;
         margin-left: 25px;
     }
     #home .navbar nav ul {
