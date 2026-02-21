@@ -529,4 +529,176 @@ outline: none;
 }
 
 /* Footer End */
+/* Tablet Responsive */
+ @media (max-width: 768px) {
+
+    #home .navbar nav {
+        display: block;
+        text-align: center;
+        max-width: 425%;
+        margin-left: 25px;
+    }
+    #home .navbar nav ul {
+        margin-top: 20px;
+    }
+    #home .navbar nav ul a {
+        margin: 0 8px;
+    }
+    #home .header-content  {
+        grid-template-columns: 1fr;
+    }
+    #home .header-content .content-text {
+        margin-bottom: 0rem;
+        margin-top: 5rem;
+        width: 1100px;
+    }
+
+    #home .header-content h1 {
+
+    font-size: 50px;
+
+    }
+
+    header .header-content img {
+
+        max-width: 210px;
+        margin: auto;
+        margin-left: 22.5%;
+        
+    }
+
+    #about .about-content,
+    #contact .row  {
+
+    grid-template-columns: 1fr;
+    row-gap: 3rem;
+
+    }
+    #skills .skills-content .row,
+    
+    #portfolio .row{
+
+    grid-template-columns: repeat(2, 1fr);
+
+    }
+    #services .row  {
+
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 210px;
+    margin: auto;
+    margin-left: 125px;
+    margin-right: 0px;
+
+    }
+    #contact .row img {
+
+        max-width: 250px;
+        margin: auto;
+    }
+    #contact {
+        margin-bottom: 2rem;
+    }
+      #footer {
+
+        margin-bottom: 20rem;
+        border-radius: .2rem;
+      }
+}
+  
+/* Mobile Responsive */
+
+  @media (max-width: 528px) {
+
+    #home .navbar nav {
+        width: 100vh;
+        display: block;
+        text-align: center;
+        margin-right: 580%;
+        margin-left: 1px;
+        
+        
+        
+        
+    }
+    
+    header .header-content img {
+        
+        max-width: 210px;
+        margin: auto;
+        margin-left: 5.5%;
+       
+    }
+
+    #home .header-content h1 {
+
+        font-size: 45px;
+    
+        }
+        #home .header-content p span,
+        #home .header-content .title   {
+
+        font-size: 16px;
+
+        }
+       
+        header .header-content img {
+
+            margin-top: 2rem;
+        }
+       
+        #about h2,
+ #skills h2,
+  #services h2,
+  #portfolio h2,
+  #contact h2 {
+
+font-size: 30px;
+
+  }
+
+  
+
+
+  #about .about-content .col-1 h3{
+
+   font-size: 20px;
+
+
+  } 
+  #skills .skills-content .row,
+  #services .row,
+    #portfolio .row{
+
+    grid-template-columns: 1fr;
+
+    }
+
+    #contact .row {
+
+      padding: 2rem 1rem;
+
+    }
+    #contact {
+        
+        margin-bottom: 0rem ;
+    }
+    #footer {
+        width: 100vh;
+        margin-top: 0rem;
+        margin-bottom: 8rem;
+        border-radius: .2rem;
+      }
+
+      #services .row  {
+
+        
+        max-width: 210px;
+        margin: auto;
+        margin-left: 64px;
+        margin-right: 0px;
+    
+        }
+        
+    
+}
 
