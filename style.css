@@ -610,8 +610,8 @@ outline: none;
   @media (max-width: 528px) {
 
     #home .navbar nav {
-        width: 100vh;
-        display: block;
+        width: 100%;
+        display: flex;
         text-align: center;
         margin: auto;
         margin-left: 1px;
