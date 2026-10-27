@@ -713,7 +713,7 @@
 <!-- ================= FLOATING BUTTONS (Bottom Right) ================= -->
 <div class="fixed bottom-6 right-4 md:right-6 z-50 flex flex-col items-end space-y-3">
     <!-- WhatsApp Button -->
-    <a href="https://wa.me/9647712345678?text=مرحباً%20جعفر،%20أريد%20التواصل%20معك%20بخصوص%20مشروع" target="_blank" 
+    <a href="https://wa.me/249126335052?text=مرحباً%20جعفر،%20أريد%20التواصل%20معك%20بخصوص%20مشروع" target="_blank" 
        id="whatsappBtn"
        class="whatsapp-float w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 group"
        aria-label="WhatsApp">
@@ -1010,7 +1010,6 @@
                 optionsHTML
             );
             
-            // Attach event listeners
             document.querySelectorAll('.game-option').forEach(btn => {
                 btn.addEventListener('click', () => handleAnswer(parseInt(btn.dataset.index), btn));
             });
@@ -1021,7 +1020,6 @@
         const q = questions[currentQuestion];
         const allOptions = document.querySelectorAll('.game-option');
         
-        // Disable all options
         allOptions.forEach(b => b.disabled = true);
         
         if (selected === q.correct) {
@@ -1107,7 +1105,6 @@
         }, 300);
     }
     
-    // Bot toggle
     botToggle.addEventListener('click', () => {
         botWindow.classList.toggle('hidden');
         if (!botWindow.classList.contains('hidden') && !gameStarted) {
@@ -1119,7 +1116,6 @@
         botWindow.classList.add('hidden');
     });
     
-    // Bot send (fallback for typing)
     botSend.addEventListener('click', () => {
         const text = botInput.value.trim();
         if (text) {
