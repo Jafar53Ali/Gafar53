@@ -18,7 +18,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -42,8 +41,6 @@
                         'gradient-x': 'gradientX 3s ease infinite',
                         'bounce-slow': 'bounceSlow 3s ease-in-out infinite',
                         'spin-slow': 'spin 8s linear infinite',
-                        'whatsapp-pulse': 'whatsappPulse 2s ease-in-out infinite',
-                        'bot-bounce': 'botBounce 2s ease-in-out infinite',
                     },
                     keyframes: {
                         float: {
@@ -78,14 +75,6 @@
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-10px)' },
                         },
-                        whatsappPulse: {
-                            '0%, 100%': { boxShadow: '0 0 0 0 rgba(37, 211, 102, 0.7)' },
-                            '70%': { boxShadow: '0 0 0 20px rgba(37, 211, 102, 0)' },
-                        },
-                        botBounce: {
-                            '0%, 100%': { transform: 'translateY(0) rotate(-5deg)' },
-                            '50%': { transform: 'translateY(-8px) rotate(5deg)' },
-                        },
                     },
                 },
             },
@@ -102,6 +91,13 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradientX 3s ease infinite;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .glass-dark {
@@ -148,17 +144,24 @@
             transform: translateY(-10px);
         }
         
+        .portfolio-card:hover .portfolio-overlay {
+            opacity: 1;
+        }
+        
         .portfolio-card:hover img {
             transform: scale(1.1);
         }
         
         .hero-bg {
             background: linear-gradient(135deg, #ecf0f3 0%, #d1e7e0 50%, #ecf0f3 100%);
-            transition: background 0.5s ease;
         }
         
-        .dark .hero-bg {
-            background: linear-gradient(135deg, #033b4a 0%, #0f272d 50%, #033b4a 100%);
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            z-index: 0;
         }
         
         .btn-glow {
@@ -198,90 +201,9 @@
         .animation-delay-4000 {
             animation-delay: 4s;
         }
-        
-        /* Dark mode transitions */
-        body, section, footer, nav, .service-card, input, textarea {
-            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
-        }
-        
-        /* WhatsApp Float Button */
-        .whatsapp-float {
-            animation: whatsappPulse 2s infinite;
-        }
-        
-        /* Bot Chat Window */
-        #botWindow {
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            transform-origin: bottom right;
-        }
-        
-        #botWindow.hidden {
-            opacity: 0;
-            transform: scale(0.5) translateY(20px);
-            pointer-events: none;
-            display: block !important;
-        }
-        
-        .bot-message {
-            animation: fadeUp 0.4s ease-out forwards;
-        }
-        
-        /* Game Options */
-        .game-option {
-            transition: all 0.2s ease;
-        }
-        
-        .game-option:hover:not(:disabled) {
-            transform: translateX(5px);
-            border-color: #20c997 !important;
-        }
-        
-        .game-option.correct {
-            background: rgba(32, 201, 151, 0.2) !important;
-            border-color: #20c997 !important;
-            color: #20c997 !important;
-        }
-        
-        .game-option.wrong {
-            background: rgba(239, 68, 68, 0.2) !important;
-            border-color: #ef4444 !important;
-            color: #ef4444 !important;
-        }
-        
-        /* Dark mode scrollbar */
-        .dark ::-webkit-scrollbar {
-            width: 10px;
-        }
-        
-        .dark ::-webkit-scrollbar-track {
-            background: #0f272d;
-        }
-        
-        .dark ::-webkit-scrollbar-thumb {
-            background: #20c997;
-            border-radius: 5px;
-        }
-        
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: #00f4ab;
-        }
-        
-        /* Theme toggle icon rotation */
-        #themeToggle i {
-            transition: transform 0.5s ease;
-        }
-        
-        #themeToggle:hover i {
-            transform: rotate(180deg);
-        }
     </style>
 </head>
-<body class="font-poppins bg-gray-50 dark:bg-[#0a1a1f] overflow-x-hidden">
-
-<!-- ================= THEME TOGGLE (Top Right Fixed) ================= -->
-<button id="themeToggle" class="fixed top-20 right-4 md:top-24 md:right-6 z-[60] w-12 h-12 rounded-full bg-white dark:bg-dark text-primary dark:text-secondary shadow-lg hover:scale-110 transition-all duration-300 flex items-center justify-center border border-gray-200 dark:border-secondary/30" aria-label="Toggle theme">
-    <i class="fa-solid fa-moon text-lg" id="themeIcon"></i>
-</button>
+<body class="font-poppins bg-gray-50 overflow-x-hidden">
 
 <!-- ================= HEADER START ================= -->
 <header id="home" class="relative min-h-screen hero-bg overflow-hidden">
@@ -294,10 +216,12 @@
     <nav class="fixed top-0 left-0 w-full z-50 glass-dark shadow-lg transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 md:h-20">
+                <!-- Logo -->
                 <a href="#home" class="font-saira text-xl md:text-2xl font-bold text-white hover:text-secondary transition-colors duration-300">
                     Jafar<span class="text-secondary">.</span>
                 </a>
                 
+                <!-- Desktop Menu -->
                 <ul class="hidden md:flex items-center space-x-6 lg:space-x-8">
                     <li><a href="#home" class="nav-link text-white font-medium hover:text-secondary transition-colors">Home</a></li>
                     <li><a href="#about" class="nav-link text-white font-medium hover:text-secondary transition-colors">About</a></li>
@@ -307,12 +231,14 @@
                     <li><a href="#contact" class="nav-link text-white font-medium hover:text-secondary transition-colors">Contact</a></li>
                 </ul>
                 
+                <!-- Mobile Menu Button -->
                 <button id="menuBtn" class="md:hidden text-white text-2xl focus:outline-none" aria-label="Toggle menu">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
         </div>
         
+        <!-- Mobile Menu -->
         <div id="mobileMenu" class="md:hidden hidden bg-primary/95 backdrop-blur-lg border-t border-white/10">
             <ul class="flex flex-col items-center py-4 space-y-3">
                 <li><a href="#home" class="mobile-link text-white font-medium hover:text-secondary transition-colors py-2">Home</a></li>
@@ -328,20 +254,22 @@
     <!-- Hero Content -->
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-16">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-8rem)]">
+            <!-- Text Content -->
             <div class="text-center lg:text-left order-2 lg:order-1">
                 <p class="text-secondary font-semibold text-lg md:text-xl mb-2 animate-fade-up" style="animation-delay: 0.2s">
                     <span class="inline-block animate-bounce-slow">👋</span> Hi There, I'm
                 </p>
-                <h1 class="font-saira text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary dark:text-white mb-4 animate-fade-up" style="animation-delay: 0.4s">
+                <h1 class="font-saira text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-4 animate-fade-up" style="animation-delay: 0.4s">
                     Jafar Ali <span class="gradient-text">Hamid</span>
                 </h1>
-                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 font-medium mb-6 animate-fade-up" style="animation-delay: 0.6s">
+                <p class="text-lg md:text-xl text-gray-600 font-medium mb-6 animate-fade-up" style="animation-delay: 0.6s">
                     Full Stack Web Developer
                 </p>
-                <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-lg mx-auto lg:mx-0 animate-fade-up" style="animation-delay: 0.8s">
+                <p class="text-gray-500 mb-8 max-w-lg mx-auto lg:mx-0 animate-fade-up" style="animation-delay: 0.8s">
                     I create beautiful, responsive, and user-friendly web applications that bring ideas to life.
                 </p>
                 
+                <!-- Social Links -->
                 <div class="flex justify-center lg:justify-start space-x-4 mb-8 animate-fade-up" style="animation-delay: 1s">
                     <a href="https://www.facebook.com/جعفر علي محمد حامد/" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white hover:bg-secondary hover:scale-110 transition-all duration-300 shadow-lg" aria-label="Facebook">
                         <i class="fa-brands fa-facebook-f"></i>
@@ -365,10 +293,11 @@
                 </a>
             </div>
             
+            <!-- Hero Image -->
             <div class="flex justify-center order-1 lg:order-2 animate-fade-in" style="animation-delay: 0.3s">
                 <div class="relative">
                     <div class="absolute inset-0 bg-gradient-to-br from-secondary to-accent rounded-full blur-2xl opacity-30 animate-pulse-glow"></div>
-                    <img src="Jafar.png" alt="Jafar Ali Hamid" class="relative w-64 sm:w-80 md:w-96 lg:w-[420px] rounded-full object-cover shadow-2xl animate-float border-4 border-white/50 dark:border-secondary/30">
+                    <img src="Jafar.png" alt="Jafar Ali Hamid" class="relative w-64 sm:w-80 md:w-96 lg:w-[420px] rounded-full object-cover shadow-2xl animate-float border-4 border-white/50">
                 </div>
             </div>
         </div>
@@ -378,22 +307,22 @@
 
 <main>
     <!-- ================= ABOUT START ================= -->
-    <section id="about" class="py-20 bg-white dark:bg-[#0a1a1f]">
+    <section id="about" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-4 reveal">
-                <h2 class="font-saira text-3xl sm:text-4xl md:text-5xl font-bold text-primary dark:text-white">About <span class="gradient-text">Me</span></h2>
+                <h2 class="font-saira text-3xl sm:text-4xl md:text-5xl font-bold text-primary">About <span class="gradient-text">Me</span></h2>
                 <div class="w-20 h-1 bg-gradient-to-r from-secondary to-accent mx-auto mt-3 rounded-full"></div>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-12 items-start">
                 <div class="lg:col-span-2 reveal">
-                    <h3 class="text-2xl md:text-3xl font-semibold text-primary dark:text-white mb-6">
+                    <h3 class="text-2xl md:text-3xl font-semibold text-primary mb-6">
                         I'm <span class="gradient-text">Jafar Ali Hamid,</span> a Web Developer
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                    <p class="text-gray-600 leading-relaxed mb-4">
                         I'm a front-end web developer with a strong passion for creating visually appealing and user-friendly web applications. I am very passionate about improving my coding skills & developing applications & websites.
                     </p>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                    <p class="text-gray-600 leading-relaxed mb-6">
                         I have also gained a solid foundation in HTML, CSS, and JavaScript. I am always eager to learn new technologies and techniques to enhance my skillset.
                     </p>
                     
@@ -405,27 +334,27 @@
                     </div>
                 </div>
                 
-                <div class="bg-gray-50 dark:bg-[#0f272d] rounded-2xl p-6 shadow-lg reveal border border-transparent dark:border-secondary/20">
-                    <h4 class="text-xl font-semibold text-primary dark:text-white mb-5 flex items-center gap-2">
+                <div class="bg-gray-50 rounded-2xl p-6 shadow-lg reveal">
+                    <h4 class="text-xl font-semibold text-primary mb-5 flex items-center gap-2">
                         <i class="fa-solid fa-user text-secondary"></i> Personal Info
                     </h4>
                     <div class="space-y-4">
-                        <div class="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-white/10">
+                        <div class="flex items-center gap-3 pb-3 border-b border-gray-200">
                             <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
                                 <i class="fa-solid fa-cake-candles"></i>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Age</p>
-                                <p class="text-primary dark:text-white font-medium">22 Years</p>
+                                <p class="text-xs text-gray-500">Age</p>
+                                <p class="text-primary font-medium">22 Years</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-white/10">
+                        <div class="flex items-center gap-3 pb-3 border-b border-gray-200">
                             <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
                                 <i class="fa-solid fa-envelope"></i>
                             </div>
                             <div class="min-w-0">
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Email</p>
-                                <p class="text-primary dark:text-white font-medium text-sm break-all">eng.gafar.tech@gmail.com</p>
+                                <p class="text-xs text-gray-500">Email</p>
+                                <p class="text-primary font-medium text-sm break-all">eng.gafar.tech@gmail.com</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
@@ -433,8 +362,8 @@
                                 <i class="fa-solid fa-location-dot"></i>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Place</p>
-                                <p class="text-primary dark:text-white font-medium text-sm">15 November AL-oubid</p>
+                                <p class="text-xs text-gray-500">Place</p>
+                                <p class="text-primary font-medium text-sm">15 November AL-oubid</p>
                             </div>
                         </div>
                     </div>
@@ -496,63 +425,63 @@
     <!-- ================= SKILLS END ================= -->
 
     <!-- ================= SERVICES START ================= -->
-    <section id="services" class="py-20 bg-gray-50 dark:bg-[#0a1a1f]">
+    <section id="services" class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-4 reveal">
                 <div class="flex justify-center items-center gap-3 mb-2">
                     <img src="services.png" alt="Services" class="w-10 h-10 object-contain">
-                    <h2 class="font-saira text-3xl sm:text-4xl md:text-5xl font-bold text-primary dark:text-white">My <span class="gradient-text">Services</span></h2>
+                    <h2 class="font-saira text-3xl sm:text-4xl md:text-5xl font-bold text-primary">My <span class="gradient-text">Services</span></h2>
                 </div>
                 <div class="w-20 h-1 bg-gradient-to-r from-secondary to-accent mx-auto mt-3 rounded-full"></div>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-12">
-                <div class="service-card bg-white dark:bg-[#0f272d] rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-secondary/20 group reveal">
+                <div class="service-card bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group reveal">
                     <div class="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5 group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
                         <img src="laptop.png" alt="Web Development" class="w-8 h-8 object-contain group-hover:brightness-0 group-hover:invert transition-all">
                     </div>
-                    <h3 class="text-xl font-semibold text-primary dark:text-white mb-3">WEB DEVELOPMENT</h3>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">I can build a website by using HTML, CSS, and JavaScript with modern best practices.</p>
+                    <h3 class="text-xl font-semibold text-primary mb-3">WEB DEVELOPMENT</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">I can build a website by using HTML, CSS, and JavaScript with modern best practices.</p>
                 </div>
                 
-                <div class="service-card bg-white dark:bg-[#0f272d] rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-secondary/20 group reveal">
+                <div class="service-card bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group reveal">
                     <div class="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5 group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
                         <img src="responsive.png" alt="Responsive Design" class="w-8 h-8 object-contain group-hover:brightness-0 group-hover:invert transition-all">
                     </div>
-                    <h3 class="text-xl font-semibold text-primary dark:text-white mb-3">RESPONSIVE DESIGN</h3>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Your website will be 100% responsive for all devices: tablets and smartphones.</p>
+                    <h3 class="text-xl font-semibold text-primary mb-3">RESPONSIVE DESIGN</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Your website will be 100% responsive for all devices: tablets and smartphones.</p>
                 </div>
                 
-                <div class="service-card bg-white dark:bg-[#0f272d] rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-secondary/20 group reveal">
+                <div class="service-card bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group reveal">
                     <div class="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5 group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
                         <img src="design.png" alt="Creative Design" class="w-8 h-8 object-contain group-hover:brightness-0 group-hover:invert transition-all">
                     </div>
-                    <h3 class="text-xl font-semibold text-primary dark:text-white mb-3">CREATIVE DESIGN</h3>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">I can edit your current website by adding new content to make it much better.</p>
+                    <h3 class="text-xl font-semibold text-primary mb-3">CREATIVE DESIGN</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">I can edit your current website by adding new content to make it much better.</p>
                 </div>
                 
-                <div class="service-card bg-white dark:bg-[#0f272d] rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-secondary/20 group reveal">
+                <div class="service-card bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group reveal">
                     <div class="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5 group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
                         <img src="idea.png" alt="Web Ideas" class="w-8 h-8 object-contain group-hover:brightness-0 group-hover:invert transition-all">
                     </div>
-                    <h3 class="text-xl font-semibold text-primary dark:text-white mb-3">WEB IDEAS</h3>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">I could turn your ideas into real projects with high quality and precision.</p>
+                    <h3 class="text-xl font-semibold text-primary mb-3">WEB IDEAS</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">I could turn your ideas into real projects with high quality and precision.</p>
                 </div>
                 
-                <div class="service-card bg-white dark:bg-[#0f272d] rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-secondary/20 group reveal">
+                <div class="service-card bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group reveal">
                     <div class="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5 group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
                         <img src="retouch.png" alt="Retouch" class="w-8 h-8 object-contain group-hover:brightness-0 group-hover:invert transition-all">
                     </div>
-                    <h3 class="text-xl font-semibold text-primary dark:text-white mb-3">RETOUCH</h3>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">I can help you by redesigning your current website to look much better.</p>
+                    <h3 class="text-xl font-semibold text-primary mb-3">RETOUCH</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">I can help you by redesigning your current website to look much better.</p>
                 </div>
                 
-                <div class="service-card bg-white dark:bg-[#0f272d] rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-secondary/20 group reveal">
+                <div class="service-card bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group reveal">
                     <div class="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5 group-hover:bg-secondary group-hover:scale-110 transition-all duration-300">
                         <img src="support.png" alt="Support" class="w-8 h-8 object-contain group-hover:brightness-0 group-hover:invert transition-all">
                     </div>
-                    <h3 class="text-xl font-semibold text-primary dark:text-white mb-3">SUPPORT</h3>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Support is available if you want to make any changes to your website after delivering it.</p>
+                    <h3 class="text-xl font-semibold text-primary mb-3">SUPPORT</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Support is available if you want to make any changes to your website after delivering it.</p>
                 </div>
             </div>
         </div>
@@ -572,6 +501,7 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-12">
+                <!-- Portfolio 1 -->
                 <div class="portfolio-card group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 reveal">
                     <div class="overflow-hidden h-52">
                         <img src="portfolio-1.png" alt="My Website" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
@@ -584,6 +514,7 @@
                     </div>
                 </div>
                 
+                <!-- Portfolio 2 -->
                 <div class="portfolio-card group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 reveal">
                     <div class="overflow-hidden h-52">
                         <img src="portfolio-2.png" alt="My GitHub" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
@@ -596,6 +527,7 @@
                     </div>
                 </div>
                 
+                <!-- Portfolio 3 -->
                 <div class="portfolio-card group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 reveal">
                     <div class="overflow-hidden h-52">
                         <img src="portfolio-3.png" alt="PEPSI" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
@@ -608,6 +540,7 @@
                     </div>
                 </div>
                 
+                <!-- Portfolio 4 -->
                 <div class="portfolio-card group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 reveal">
                     <div class="overflow-hidden h-52">
                         <img src="portfolio-4.png" alt="FUSE Company" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
@@ -620,6 +553,7 @@
                     </div>
                 </div>
                 
+                <!-- Portfolio 5 -->
                 <div class="portfolio-card group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 reveal">
                     <div class="overflow-hidden h-52">
                         <img src="portfolio-5.png" alt="Sunny Side" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
@@ -632,6 +566,7 @@
                     </div>
                 </div>
                 
+                <!-- Portfolio 6 -->
                 <div class="portfolio-card group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 reveal">
                     <div class="overflow-hidden h-52">
                         <img src="portfolio-6.png" alt="Product Preview Card" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
@@ -649,35 +584,37 @@
     <!-- ================= PORTFOLIO END ================= -->
 
     <!-- ================= CONTACT START ================= -->
-    <section id="contact" class="py-20 bg-gray-50 dark:bg-[#0a1a1f]">
+    <section id="contact" class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-4 reveal">
-                <h2 class="font-saira text-3xl sm:text-4xl md:text-5xl font-bold text-primary dark:text-white">
+                <h2 class="font-saira text-3xl sm:text-4xl md:text-5xl font-bold text-primary">
                     <i class="fa-solid fa-headset text-secondary"></i> Get In <span class="gradient-text">Touch</span>
                 </h2>
                 <div class="w-20 h-1 bg-gradient-to-r from-secondary to-accent mx-auto mt-3 rounded-full"></div>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12 bg-white dark:bg-[#0f272d] rounded-3xl shadow-xl p-6 md:p-10 reveal border border-transparent dark:border-secondary/20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12 bg-white rounded-3xl shadow-xl p-6 md:p-10 reveal">
+                <!-- Contact Image -->
                 <div class="flex items-center justify-center order-2 lg:order-1">
                     <img src="contact.png" alt="Get In Touch" class="max-w-full h-auto max-h-80 object-contain animate-float">
                 </div>
                 
+                <!-- Contact Form -->
                 <form action="https://formsubmit.co/rullo.g20@gmail.com" method="POST" class="space-y-4 order-1 lg:order-2">
                     <div>
-                        <label for="Name" class="block text-sm font-medium text-primary dark:text-white mb-1">Name</label>
+                        <label for="Name" class="block text-sm font-medium text-primary mb-1">Name</label>
                         <input type="text" name="Name" id="Name" placeholder="Your Name" required
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-secondary/30 bg-gray-50 dark:bg-[#0a1a1f] text-primary dark:text-white placeholder-gray-400 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all">
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all">
                     </div>
                     <div>
-                        <label for="Email" class="block text-sm font-medium text-primary dark:text-white mb-1">Email</label>
+                        <label for="Email" class="block text-sm font-medium text-primary mb-1">Email</label>
                         <input type="email" name="Email" id="Email" placeholder="your@email.com" required
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-secondary/30 bg-gray-50 dark:bg-[#0a1a1f] text-primary dark:text-white placeholder-gray-400 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all">
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all">
                     </div>
                     <div>
-                        <label for="Message" class="block text-sm font-medium text-primary dark:text-white mb-1">Message</label>
+                        <label for="Message" class="block text-sm font-medium text-primary mb-1">Message</label>
                         <textarea name="Message" id="Message" cols="30" rows="5" placeholder="Your message..."
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-secondary/30 bg-gray-50 dark:bg-[#0a1a1f] text-primary dark:text-white placeholder-gray-400 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all resize-none"></textarea>
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all resize-none"></textarea>
                     </div>
                     <button type="submit" class="w-full bg-secondary text-white py-3 rounded-xl font-semibold hover:bg-accent hover:scale-[1.02] transition-all duration-300 shadow-lg btn-glow">
                         <i class="fa-solid fa-paper-plane mr-2"></i> Send Message
@@ -710,99 +647,13 @@
 </footer>
 <!-- ================= FOOTER END ================= -->
 
-<!-- ================= FLOATING BUTTONS (Bottom Right) ================= -->
-<div class="fixed bottom-6 right-4 md:right-6 z-50 flex flex-col items-end space-y-3">
-    <!-- WhatsApp Button -->
-    <a href="https://wa.me/9647712345678?text=مرحباً%20جعفر،%20أريد%20التواصل%20معك%20بخصوص%20مشروع" target="_blank" 
-       id="whatsappBtn"
-       class="whatsapp-float w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 group"
-       aria-label="WhatsApp">
-        <i class="fa-brands fa-whatsapp text-3xl"></i>
-        <span class="absolute right-full mr-3 bg-dark text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none hidden md:block">
-            تواصل معي على واتساب
-        </span>
-    </a>
-    
-    <!-- Bot Button -->
-    <button id="botToggle" 
-       class="w-14 h-14 rounded-full bg-gradient-to-br from-secondary to-accent text-white flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 animate-bot-bounce group relative"
-       aria-label="Game Bot">
-        <i class="fa-solid fa-gamepad text-2xl"></i>
-        <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
-        <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-    </button>
-    
-    <!-- Scroll to Top Button -->
-    <button id="scrollTop" class="w-12 h-12 rounded-full bg-secondary text-white shadow-lg hover:bg-accent hover:scale-110 transition-all duration-300 opacity-0 pointer-events-none" aria-label="Scroll to top">
-        <i class="fa-solid fa-arrow-up"></i>
-    </button>
-</div>
-
-<!-- ================= GAME BOT CHAT WINDOW ================= -->
-<div id="botWindow" class="hidden fixed bottom-24 right-4 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm bg-white dark:bg-[#0f272d] rounded-2xl shadow-2xl border border-gray-200 dark:border-secondary/30 overflow-hidden">
-    <!-- Bot Header -->
-    <div class="bg-gradient-to-r from-primary to-dark p-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-                <i class="fa-solid fa-robot text-white"></i>
-            </div>
-            <div>
-                <h3 class="text-white font-semibold text-sm">Code Bot 🤖</h3>
-                <p class="text-secondary text-xs flex items-center gap-1">
-                    <span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span> Online - جاهز للعب
-                </p>
-            </div>
-        </div>
-        <button id="botClose" class="text-white/70 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-    </div>
-    
-    <!-- Bot Messages -->
-    <div id="botMessages" class="p-4 h-80 overflow-y-auto bg-gray-50 dark:bg-[#0a1a1f] space-y-3">
-        <!-- Messages injected here -->
-    </div>
-    
-    <!-- Bot Input -->
-    <div class="p-3 bg-white dark:bg-[#0f272d] border-t border-gray-200 dark:border-secondary/20">
-        <div class="flex gap-2">
-            <input type="text" id="botInput" placeholder="اكتب إجابتك..." 
-                class="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-secondary/30 bg-gray-50 dark:bg-[#0a1a1f] text-primary dark:text-white text-sm outline-none focus:border-secondary transition-all">
-            <button id="botSend" class="w-10 h-10 rounded-lg bg-secondary text-white flex items-center justify-center hover:bg-accent transition-all">
-                <i class="fa-solid fa-paper-plane text-sm"></i>
-            </button>
-        </div>
-    </div>
-</div>
+<!-- Scroll to Top Button -->
+<button id="scrollTop" class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-secondary text-white shadow-lg hover:bg-accent hover:scale-110 transition-all duration-300 opacity-0 pointer-events-none z-40" aria-label="Scroll to top">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
 
 <script>
-    // ==================== THEME TOGGLE ====================
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const html = document.documentElement;
-    
-    // Load saved theme
-    if (localStorage.getItem('theme') === 'dark' || 
-        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        html.classList.add('dark');
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-    }
-    
-    themeToggle.addEventListener('click', () => {
-        html.classList.toggle('dark');
-        if (html.classList.contains('dark')) {
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            themeIcon.classList.remove('fa-sun');
-            themeIcon.classList.add('fa-moon');
-            localStorage.setItem('theme', 'light');
-        }
-    });
-    
-    // ==================== MOBILE MENU ====================
+    // Mobile Menu Toggle
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const menuIcon = menuBtn.querySelector('i');
@@ -818,6 +669,7 @@
         }
     });
     
+    // Close mobile menu on link click
     document.querySelectorAll('.mobile-link').forEach(link => {
         link.addEventListener('click', () => {
             mobileMenu.classList.add('hidden');
@@ -826,7 +678,7 @@
         });
     });
     
-    // ==================== NAVBAR SCROLL ====================
+    // Navbar scroll effect
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
@@ -836,21 +688,28 @@
         }
     });
     
-    // ==================== SCROLL REVEAL ====================
+    // Scroll Reveal Animation
     const revealElements = document.querySelectorAll('.reveal');
+    
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
-                setTimeout(() => entry.target.classList.add('active'), index * 100);
+                setTimeout(() => {
+                    entry.target.classList.add('active');
+                }, index * 100);
                 revealObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
     
     revealElements.forEach(el => revealObserver.observe(el));
     
-    // ==================== SCROLL TO TOP ====================
+    // Scroll to Top Button
     const scrollTopBtn = document.getElementById('scrollTop');
+    
     window.addEventListener('scroll', () => {
         if (window.scrollY > 500) {
             scrollTopBtn.classList.remove('opacity-0', 'pointer-events-none');
@@ -865,7 +724,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
     
-    // ==================== SMOOTH SCROLL ====================
+    // Smooth scroll for all anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -876,263 +735,6 @@
                 window.scrollTo({ top: targetPosition, behavior: 'smooth' });
             }
         });
-    });
-    
-    // ==================== GAME BOT ====================
-    const botToggle = document.getElementById('botToggle');
-    const botWindow = document.getElementById('botWindow');
-    const botClose = document.getElementById('botClose');
-    const botMessages = document.getElementById('botMessages');
-    const botInput = document.getElementById('botInput');
-    const botSend = document.getElementById('botSend');
-    
-    // Game state
-    let currentQuestion = 0;
-    let score = 0;
-    let gameStarted = false;
-    
-    // Questions bank
-    const questions = [
-        {
-            q: "ما هو الوسم الذي يُستخدم لإنشاء رابط في HTML؟",
-            options: ["<link>", "<a>", "<href>", "<url>"],
-            correct: 1,
-            hint: "يبدأ بحرف A"
-        },
-        {
-            q: "أي لغة تُستخدم لتنسيق صفحات الويب؟",
-            options: ["HTML", "Python", "CSS", "Java"],
-            correct: 2,
-            hint: "Cascading Style Sheets"
-        },
-        {
-            q: "ما هي نتيجة: 2 + '2' في JavaScript؟",
-            options: ["4", "'22'", "NaN", "Error"],
-            correct: 1,
-            hint: "في JS، الجمع مع نص = دمج"
-        },
-        {
-            q: "أي دالة تُستخدم لطباعة شيء في console؟",
-            options: ["print()", "echo()", "console.log()", "log()"],
-            correct: 2,
-            hint: "تبدأ بـ console"
-        },
-        {
-            q: "ما هو العنصر الذي يُستخدم لعرض صورة في HTML؟",
-            options: ["<picture>", "<image>", "<img>", "<src>"],
-            correct: 2,
-            hint: "اختصار كلمة image"
-        },
-        {
-            q: "ماذا يعني CSS؟",
-            options: ["Computer Style Sheets", "Cascading Style Sheets", "Creative Style System", "Colorful Style Sheets"],
-            correct: 1,
-            hint: "كلمة Cascading هي المفتاح"
-        },
-        {
-            q: "أي من هذه اللغات ليست لغة برمجة؟",
-            options: ["Python", "JavaScript", "HTML", "C++"],
-            correct: 2,
-            hint: "HTML لغة توصيف وليست برمجة"
-        },
-        {
-            q: "كيف تكتب تعليق في JavaScript؟",
-            options: ["<!-- تعليق -->", "# تعليق", "// تعليق", "/* تعليق */ فقط"],
-            correct: 2,
-            hint: "شرطتان مائلتان"
-        }
-    ];
-    
-    function addMessage(text, type = 'bot', options = null) {
-        const div = document.createElement('div');
-        div.className = `bot-message flex ${type === 'user' ? 'justify-end' : 'justify-start'}`;
-        
-        if (type === 'bot') {
-            div.innerHTML = `
-                <div class="max-w-[85%] bg-white dark:bg-[#0f272d] border border-gray-200 dark:border-secondary/20 rounded-2xl rounded-tl-sm px-4 py-2 shadow-sm">
-                    <p class="text-sm text-primary dark:text-white">${text}</p>
-                    ${options ? `<div class="mt-3 space-y-2" id="gameOptions">${options}</div>` : ''}
-                </div>
-            `;
-        } else {
-            div.innerHTML = `
-                <div class="max-w-[85%] bg-secondary text-white rounded-2xl rounded-tr-sm px-4 py-2 shadow-sm">
-                    <p class="text-sm">${text}</p>
-                </div>
-            `;
-        }
-        
-        botMessages.appendChild(div);
-        botMessages.scrollTop = botMessages.scrollHeight;
-    }
-    
-    function showTyping() {
-        const div = document.createElement('div');
-        div.id = 'typingIndicator';
-        div.className = 'bot-message flex justify-start';
-        div.innerHTML = `
-            <div class="bg-white dark:bg-[#0f272d] border border-gray-200 dark:border-secondary/20 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
-                <div class="flex space-x-1">
-                    <span class="w-2 h-2 bg-secondary rounded-full animate-bounce" style="animation-delay: 0s"></span>
-                    <span class="w-2 h-2 bg-secondary rounded-full animate-bounce" style="animation-delay: 0.15s"></span>
-                    <span class="w-2 h-2 bg-secondary rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
-                </div>
-            </div>
-        `;
-        botMessages.appendChild(div);
-        botMessages.scrollTop = botMessages.scrollHeight;
-    }
-    
-    function removeTyping() {
-        const typing = document.getElementById('typingIndicator');
-        if (typing) typing.remove();
-    }
-    
-    function askQuestion() {
-        if (currentQuestion >= questions.length) {
-            endGame();
-            return;
-        }
-        
-        showTyping();
-        setTimeout(() => {
-            removeTyping();
-            const q = questions[currentQuestion];
-            const optionsHTML = q.options.map((opt, i) => 
-                `<button class="game-option w-full text-left px-3 py-2 rounded-lg border border-gray-200 dark:border-secondary/20 text-xs text-primary dark:text-white hover:bg-secondary/10" data-index="${i}">
-                    ${String.fromCharCode(65 + i)}. ${opt}
-                </button>`
-            ).join('');
-            
-            addMessage(
-                `<strong class="text-secondary">سؤال ${currentQuestion + 1}/${questions.length}</strong><br>${q.q}`, 
-                'bot', 
-                optionsHTML
-            );
-            
-            // Attach event listeners
-            document.querySelectorAll('.game-option').forEach(btn => {
-                btn.addEventListener('click', () => handleAnswer(parseInt(btn.dataset.index), btn));
-            });
-        }, 800);
-    }
-    
-    function handleAnswer(selected, btn) {
-        const q = questions[currentQuestion];
-        const allOptions = document.querySelectorAll('.game-option');
-        
-        // Disable all options
-        allOptions.forEach(b => b.disabled = true);
-        
-        if (selected === q.correct) {
-            btn.classList.add('correct');
-            score++;
-            addMessage(`✅ إجابة صحيحة! أحسنت 🎉`, 'user');
-            setTimeout(() => {
-                addMessage(`رائع! مستواك في البرمجة ممتاز 💪`, 'bot');
-                currentQuestion++;
-                setTimeout(askQuestion, 1000);
-            }, 500);
-        } else {
-            btn.classList.add('wrong');
-            allOptions[q.correct].classList.add('correct');
-            addMessage(`❌ إجابة خاطئة`, 'user');
-            setTimeout(() => {
-                addMessage(`الإجابة الصحيحة: <strong class="text-secondary">${q.options[q.correct]}</strong><br><span class="text-xs text-gray-500">💡 ${q.hint}</span>`, 'bot');
-                currentQuestion++;
-                setTimeout(askQuestion, 1500);
-            }, 500);
-        }
-    }
-    
-    function endGame() {
-        showTyping();
-        setTimeout(() => {
-            removeTyping();
-            const percentage = Math.round((score / questions.length) * 100);
-            let message = '';
-            let emoji = '';
-            
-            if (percentage === 100) {
-                message = "مذهل! أنت مبرمج حقيقي 🏆";
-                emoji = "🏆";
-            } else if (percentage >= 70) {
-                message = "ممتاز! مستواك عالي جداً 🌟";
-                emoji = "🌟";
-            } else if (percentage >= 50) {
-                message = "جيد! يمكنك التحسن أكثر 💪";
-                emoji = "💪";
-            } else {
-                message = "لا بأس، استمر في التعلم 📚";
-                emoji = "📚";
-            }
-            
-            addMessage(`
-                <div class="text-center py-2">
-                    <div class="text-4xl mb-2">${emoji}</div>
-                    <strong class="text-secondary text-lg">النتيجة النهائية</strong><br>
-                    <span class="text-2xl font-bold text-primary dark:text-white">${score}/${questions.length}</span><br>
-                    <span class="text-sm">${percentage}%</span><br>
-                    <p class="mt-2 text-sm">${message}</p>
-                </div>
-                <button id="restartGame" class="w-full mt-3 bg-secondary text-white py-2 rounded-lg text-sm font-medium hover:bg-accent transition-all">
-                    🔄 العب مرة أخرى
-                </button>
-            `, 'bot');
-            
-            document.getElementById('restartGame').addEventListener('click', restartGame);
-        }, 1000);
-    }
-    
-    function restartGame() {
-        currentQuestion = 0;
-        score = 0;
-        gameStarted = true;
-        botMessages.innerHTML = '';
-        addMessage("🎮 لنبدأ لعبة جديدة! استعد للأسئلة...", 'bot');
-        setTimeout(askQuestion, 1000);
-    }
-    
-    function startGame() {
-        gameStarted = true;
-        currentQuestion = 0;
-        score = 0;
-        botMessages.innerHTML = '';
-        
-        setTimeout(() => {
-            addMessage("أهلاً بك في <strong class='text-secondary'>Code Quiz</strong>! 🎮<br>سأطرح عليك 8 أسئلة عن البرمجة.<br>هل أنت مستعد؟", 'bot');
-            setTimeout(() => {
-                askQuestion();
-            }, 1200);
-        }, 300);
-    }
-    
-    // Bot toggle
-    botToggle.addEventListener('click', () => {
-        botWindow.classList.toggle('hidden');
-        if (!botWindow.classList.contains('hidden') && !gameStarted) {
-            startGame();
-        }
-    });
-    
-    botClose.addEventListener('click', () => {
-        botWindow.classList.add('hidden');
-    });
-    
-    // Bot send (fallback for typing)
-    botSend.addEventListener('click', () => {
-        const text = botInput.value.trim();
-        if (text) {
-            addMessage(text, 'user');
-            botInput.value = '';
-            setTimeout(() => {
-                addMessage("استخدم الأزرار أعلاه للإجابة على الأسئلة 😊", 'bot');
-            }, 500);
-        }
-    });
-    
-    botInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') botSend.click();
     });
 </script>
 
